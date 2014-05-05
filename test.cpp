@@ -1,68 +1,80 @@
-#include<stdio.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-char K[1000002];
-int flag;
-void find_palin()
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <map>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <cstdlib>
+using namespace std;
+#define MOD 1000000007
+typedef unsigned long long ull;
+
+int N,M;
+
+#define MAX 1000000
+bool isNPrime[10000000];
+int Primes[3000000], nPrimes=0;
+int knum[100], kn=0;
+
+int seive()
 {
-	int len,i,tmp,t,tmp1;
-	len = strlen(K);
-	flag = 1;
-	for(i=0; i<len; i++)
-	{
-		if(K[i] != '9')
-		{
-			flag = 0;
-			break;
-		}
-	}
-	if(flag == 1)
-	{
-		K[0] = '1';
-		for(i=1; i<len; i++)
-			K[i] = '0';
-		K[len] = '1';
-		K[len+1] = '\0';
-		return ;
-	}
+	isNPrime[0]=isNPrime[1]=true;
+	for(int i=0;i*i<4*MAX;i++)
+		if(isNPrime[i]==false)
+			for(int j=i*i;j<4*MAX;j=j+i)
+				isNPrime[j]=true;
 	
-	flag = 0;
-	for(i=0; i<len/2; i++)
-	{
-		if(K[i] < K[len-i-1])
-			flag = -1;
-		else if(K[i] > K[len-i-1])
-			flag = 1;
-		K[len-i-1] = K[i];
-	}
-	if(flag == -1 || flag==0)
-	{
-		t = 0;
-		if(len%2 == 0)
-			tmp1 = len/2-1;
-		else
-			tmp1 = len/2;
-		while(K[tmp1-t] == '9')
-		{
-			K[tmp1-t] = '0';
-			K[len-1-tmp1+t] = '0';
-			t ++;
+	for(int i=0;i<4*MAX;i++)
+		if(isNPrime[i]==false){
+			Primes[nPrimes++]=i;
 		}
-		K[tmp1-t] ++;
-		K[len-1-tmp1+t] = K[tmp1-t];
-	}
-	return ;
+	cout << endl;
 }
-int main()
-{
-	int t,i;
-	scanf("%d\n",&t);
-	for(i=0; i<t; i++)
-	{
-		gets(K);
-		find_palin();
-		printf("%s\n",K);
+
+int pow1(int x, int n){
+	if(n==0) return 1;
+	int r = pow1(x, n/2);
+	r=r*r;
+	if(n%2==1)
+		r=r*x;
+	return r;
+}
+
+int dev(int n){
+	int res=1;
+	if(isNPrime[n]==false)
+		return n+1;
+	for(int i=0;i<nPrimes && Primes[i]<=n;i++){
+		int cnt=0;
+		while(n%Primes[i]==0) {
+			n=n/Primes[i]; cnt++;
+		}
+		if(cnt){
+			res = res * (pow1(Primes[i], cnt+1) - 1) / (Primes[i]-1);
+		}
+	}	
+	return res;
+}
+
+int main(){
+	seive();
+
+	knum[kn++]=2;
+	for(int i=1;i*i<=MAX;i++){
+		int k = dev(i*i);
+		if(isNPrime[k]==false)
+			knum[kn++] = i*i;
 	}
-	return 0;
+	int T, a, b;
+	cin >> T;
+	while(T--)
+	{
+		cin >> a >> b;
+		int ai,bi;
+		for(ai=0;ai<kn && knum[ai]<a;ai++);	
+			for(bi=kn-1;bi>=0 && knum[bi]>b;bi--);	
+				cout << bi-ai+1 << endl;
+	}
+		return 0;
 }
