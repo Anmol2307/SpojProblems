@@ -33,8 +33,9 @@ int dfs (int x, int y) {
 int main () {
 
 	int num = 0; 
-	bool flag = true;
+	
 	while (scanf("%d%d", &n, &m)) {
+		bool flag = true;
 		if(n == 0 && m == 0)
       		break;
 		int ans = 0;
