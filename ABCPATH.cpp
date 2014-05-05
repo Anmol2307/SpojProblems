@@ -31,12 +31,12 @@ int dfs (int x, int y) {
 }
 
 int main () {
-	cin>>n>>m;
 
 	int num = 0; 
-
-	while (n != 0 && m != 0) {
-		num++;
+	bool flag = true;
+	while (scanf("%d%d", &n, &m)) {
+		if(n == 0 && m == 0)
+      		break;
 		int ans = 0;
 		for (int i = 0; i < n; i++) {
 			scanf("%s",a[i]);
@@ -49,12 +49,13 @@ int main () {
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
 				if (a[i][j] == 'A' && d[i][j]==-1) {
-					ans = max (ans,dfs(i,j));
+					flag = false;
+					ans = max(ans,dfs(i,j));
 				}
 			}
 		}
-		printf("Case %d: %d\n", num, ans + 1);
-		cin >> n >> m;
+		if (flag) printf("Case %d: %d\n", ++num, 0); 
+		else printf("Case %d: %d\n", ++num, ans + 1);
 	}
 
 }
