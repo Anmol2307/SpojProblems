@@ -47,13 +47,12 @@ int stringtoint(string A)
 	return p;
 }
 
-//////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-string pat,txt;
 int lps[1000000];
-int n,m,b;
+string pat;
+int m;
+
 
 int computeLPSArray()
 {
@@ -91,53 +90,24 @@ int computeLPSArray()
  return 0;
 }
 
-int KMPSearch()
-{
-    int j  = 0;  // index for pat[]
+int main () {
+	int t;
+	cin >> t;
 
-    int i = 0;  // index for txt[]
-    while(i < n)
-    {
-    	if(pat[j] == txt[i])
-    	{
-    		j++;
-    		i++;
-    	}
-
-    	if (j == m)
-    	{
-    		b=1;
-    		printf("%d\n", i-j);
-    		j = lps[j-1];
-    	}
-
-      // mismatch after j matches
-    	else if(pat[j] != txt[i])
-    	{
-        // Do not match lps[0..lps[j-1]] characters,
-        // they will match anyway
-    		if(j != 0)
-    			j = lps[j-1];
-    		else
-    			i = i+1;
-    	}
-    }
-    return 0;
-}
-
-int main()
-{
-	while(cin>>m)
-	{
-		b=0;
-		getline(cin,pat);
-		getline(cin,pat);
-		getline(cin,txt);
-		n=txt.size();
+	for (int i =1; i <=t; i++) {
+		int n;
+		cin>>m;
+		cin>>pat;
 		computeLPSArray();
-		KMPSearch();
-		if(b==0) printf("\n");
+		printf("Test case #%d\n",i);
+		for(int j=1;j<m;j++)
+		{
+			int miss_matched=j+1-lps[j];
+			if((j+1)%miss_matched==0)
+				if((j+1)/miss_matched>1)
+					cout<<j+1<<" "<<(j+1)/miss_matched<<endl;
+		}
+		cout << endl;
 	}
-	return 0;
-}
 
+}
