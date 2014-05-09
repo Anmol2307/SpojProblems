@@ -1,80 +1,49 @@
+/*
+USER: zobayer
+TASK: EPALIN
+ALGO: manachar
+*/
 #include <iostream>
 #include <cstdio>
 #include <cstring>
-#include <map>
-#include <queue>
-#include <stack>
-#include <vector>
-#include <cstdlib>
+#include <algorithm>
 using namespace std;
-#define MOD 1000000007
-typedef unsigned long long ull;
 
-int N,M;
+const int MAX = 100001;
 
-#define MAX 1000000
-bool isNPrime[10000000];
-int Primes[3000000], nPrimes=0;
-int knum[100], kn=0;
+char buff[MAX << 1];
+int lengths[MAX << 1];
 
-int seive()
-{
-	isNPrime[0]=isNPrime[1]=true;
-	for(int i=0;i*i<4*MAX;i++)
-		if(isNPrime[i]==false)
-			for(int j=i*i;j<4*MAX;j=j+i)
-				isNPrime[j]=true;
-	
-	for(int i=0;i<4*MAX;i++)
-		if(isNPrime[i]==false){
-			Primes[nPrimes++]=i;
+int main() {
+	int len, i, s, e, pallen, found, j, d, total, k;
+	while(gets(buff)) {
+		len = strlen(buff);
+		k = 0;
+		pallen = 0;
+		for(i = 0; i < len; ) {
+			if(i > pallen && buff[i-pallen-1] == buff[i]) {
+				pallen += 2, i++;
+				continue;
+			}
+			lengths[k++] = pallen;
+			s = k - 2, e = s - pallen, found = 0;
+			for(j = s; j > e; j--) {
+				d = j - e - 1;
+				if(lengths[j] == d) {
+					pallen = d;
+					found = 1;
+					break;
+				}
+				lengths[k++] = (d < lengths[j]? d : lengths[j]);
+			}
+			if(!found) { pallen = 1; i++; }
 		}
-	cout << endl;
-}
-
-int pow1(int x, int n){
-	if(n==0) return 1;
-	int r = pow1(x, n/2);
-	r=r*r;
-	if(n%2==1)
-		r=r*x;
-	return r;
-}
-
-int dev(int n){
-	int res=1;
-	if(isNPrime[n]==false)
-		return n+1;
-	for(int i=0;i<nPrimes && Primes[i]<=n;i++){
-		int cnt=0;
-		while(n%Primes[i]==0) {
-			n=n/Primes[i]; cnt++;
-		}
-		if(cnt){
-			res = res * (pow1(Primes[i], cnt+1) - 1) / (Primes[i]-1);
-		}
-	}	
-	return res;
-}
-
-int main(){
-	seive();
-
-	knum[kn++]=2;
-	for(int i=1;i*i<=MAX;i++){
-		int k = dev(i*i);
-		if(isNPrime[k]==false)
-			knum[kn++] = i*i;
+		
+		lengths[k++] = pallen;
+		total = (len << 1) - lengths[k-1];
+		strncpy(buff + len, buff, total - len); buff[total] = 0;
+		reverse(buff + len, buff + total);
+		puts(buff);
 	}
-	int T, a, b;
-	cin >> T;
-	while(T--)
-	{
-		cin >> a >> b;
-		int ai,bi;
-		for(ai=0;ai<kn && knum[ai]<a;ai++);	
-			for(bi=kn-1;bi>=0 && knum[bi]>b;bi--);	
-				cout << bi-ai+1 << endl;
-	}
-		return 0;
+	return 0;
 }
