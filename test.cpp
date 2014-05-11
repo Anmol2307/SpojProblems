@@ -1,77 +1,86 @@
-#include<iostream>
-#include<cstdio>
-#include<cstdlib>
-#include<cstring>
-#include<queue>
+#include <iostream>
+#include <cstdio>
 using namespace std;
+bool flag[20003];
+int  q[20003];
+int n;
 
-bool prime[10000],visited[10000];
-int d[10000];
+struct pre
+{
+	int p, c;
+};
 
-void genPrime(int a,int b){
-	int p,l,i;
-	memset(prime,true,sizeof(prime));
-	for(p=2;p*p<=b;p++){
-		l=a/p;
-		l*=p;
-		for(i=l;i<=b;i+=p){
-			if(i>=a && i!=p)
-				prime[i]=false;
-		}
+pre pre[20003];
+
+int mod(int a,int b)
+{
+	if(a<b)
+	{
+		return a;
 	}
+	else
+		return a%b;
 }
-int bfs(int a,int b){
-	memset(visited,false,sizeof(visited));
-	memset(d,-1,sizeof(d));
-	queue<int>q;
-	q.push(a);
-	visited[a]=true;
-	int c=0,i,temp,j,h,u;
-	char num[8];
-	d[a]=0;
-	while(!q.empty()){
-		u=q.front();
-		q.pop();
-		sprintf(num,”%d”,u);
-		for(i=0;i<4;i++){
-			for(j=0;j<=9;j++){
-				if(i==0 && j==0)
-					continue;
-				else{
-					num[i]=j+’0′;
-					temp=atoi(num);
-					//cout << "TMP " << temp;
-					if(!visited[temp] && prime[temp] && temp!=u){
-						q.push(temp);
-						visited[temp]=true;
-						d[temp]=d[u]+1;
-						if(temp==b)
-							return d[b];
-					}
-				}
+
+void bfs(int s)
+{
+	int p[2];
+	int qh,qt,i,u;
+	qh=qt=0;
+	q[qt++]=s;
+	pre[s].p=-1;
+	pre[s].c='1';
+	flag[s]=true;
+	while(qh<qt)
+	{
+		int u=q[qh++];
+		p[0]=mod(u*mod(10,n),n);
+		p[1]=mod(p[0]+1,n);
+		for(int i=0;i<2;i++)
+		{
+			if(!flag[p[i]])
+			{
+				flag[p[i]]=true;
+				q[qt++]=p[i];
+				pre[p[i]].c=i+'0';
+				pre[p[i]].p=u;
 			}
-			sprintf(num,”%d”,u);
 		}
 	}
-	return d[b];
+
 
 }
-int main(){
-	int t,a,b,dist;
-	scanf(“%d”,&t);
-	genPrime(1000,9999);
-	while(t–){
-		scanf(“%d%d”,&a,&b);
-		if(a==b){
-			printf(“0\n”);
+
+void printpath(int s)
+{
+	if(s==-1)
+	{
+		return;
+	}
+	printpath(pre[s].p) ;
+	putchar(pre[s].c);
+}
+
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		cin>>n;
+		if(n==1)
+		{
+			cout<<1<<endl;
 			continue;
 		}
-		dist=bfs(a,b);
-		if(dist==-1)
-			printf(“impossible\n”);
-		else
-			printf(“%d\n”,dist);
+		for(int i=0;i<=n;i++)
+		{
+			flag[i]=false;
+		}
+		bfs(1);
+		printpath(0);
+		putchar('\n');
 	}
 	return 0;
-}
 
+}
