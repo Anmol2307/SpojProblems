@@ -68,7 +68,7 @@ int main()
 	while(t--)
 	{
 		cin>>n;
-		if(n==1)
+		if(n==1)	
 		{
 			cout<<1<<endl;
 			continue;
