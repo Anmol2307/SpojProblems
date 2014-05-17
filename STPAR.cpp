@@ -65,3 +65,52 @@ int stringtoint(string A)
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
+int main () {
+
+  int n;
+  while (cin >> n && n != 0 ) {
+
+    int arr[n+1];
+    int order[n+1];
+    f(i,1,n+1) {
+      cin>>arr[i];
+    }
+    stack<int> stk;
+    bool flag = true;
+    int i = 1;
+    int j = 1;
+    while (i != n+1) {
+      if (arr[j] == i) {
+        order[i] = i;
+        i++;
+        j++;
+      }
+      // else if (!stk.empty() && stk.top() == i){
+      //   stk.pop();
+      //   order[i] = i;
+      //   i++;
+      // }
+      else {
+        stk.push(arr[j]);
+        j++;
+      }
+      //cout << i << " " << j << endl;
+      
+      while (!stk.empty() && stk.top() == i) {
+        stk.pop();
+        order[i] = i;
+        i++; 
+      }
+
+      if (j == n+1 && i != n+1) {
+        flag = false;
+        break;
+      }
+    }
+
+    if (flag) cout << "yes" << endl;
+    else cout << "no" << endl;
+  }
+
+
+}
