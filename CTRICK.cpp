@@ -64,4 +64,60 @@ int stringtoint(string A)
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+struct node {
+	int index;
+	node* next;
+};
+
+
+
+int main () {
+	
+	int t;
+	cin >> t;
+	
+	while (t--) {
+		int n;
+		cin>>n;
+		int arr[n+1];
+		node* first = new node();
+		first->index = 1; 
+		node* n1 = new node();
+		f(i,1,n) {
+			node * n2 = new node();
+			n2->index = i+1;
+			if (i==1) first->next = n2;
+			else n1->next = n2;
+			n1= n2;
+		}
+		if (n==1) first->next = first;
+		n1->next = first;
+		f(i,0,n) {
+			int j = i;
+			while (j--) first = first->next; 
+			arr[first->next->index] = i+1;
+			//cout << arr[first->next->index] << endl;
+			first->next = first->next->next;
+			first = first->next;
+			
+		}
+		f(i,1,n+1) {
+			cout << arr[i] << " ";
+		}
+		cout << endl;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
