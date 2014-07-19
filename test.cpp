@@ -1,86 +1,101 @@
+/*
+written by- Piyush Golani
+language- c++
+country- India
+College- N.I.T Jamshedpur
+*/
+#include <cmath>
+#include <ctime>
 #include <iostream>
-#include <cstdio>
+#include <string>
+#include <vector>
+#include<cstdio>
+#include<sstream>
+#include<algorithm>
+#include<cstdlib>
+#include<cstring>
+#include<map>
+#include<set>
+#include<queue>
+#include<cctype>
 using namespace std;
-bool flag[20003];
-int  q[20003];
-int n;
-
-struct pre
+#define pb push_back
+#define all(s) s.begin(),s.end()
+#define f(i,a,b) for(int i=a;i<b;i++)
+#define F(i,a,b) for(int i=a;i>=b;i--)
+#define PI 3.1415926535897932384626433832795
+#define INF 2000000000
+#define BIG_INF 7000000000000000000LL
+#define mp make_pair
+#define eps 1e-9
+#define si(n) scanf("%d",&n)
+#define sll(n) scanf("%lld",&n)
+#define mod 1000000007
+#define mm 10000000
+ 
+typedef long long LL;
+ 
+string inttostring(int n)
 {
-	int p, c;
-};
-
-pre pre[20003];
-
-int mod(int a,int b)
-{
-	if(a<b)
-	{
-		return a;
-	}
-	else
-		return a%b;
+    stringstream a;
+    a<<n;
+    string A;
+    a>>A;
+    return A;
 }
-
-void bfs(int s)
+ 
+int stringtoint(string A)
 {
-	int p[2];
-	int qh,qt,i,u;
-	qh=qt=0;
-	q[qt++]=s;
-	pre[s].p=-1;
-	pre[s].c='1';
-	flag[s]=true;
-	while(qh<qt)
-	{
-		int u=q[qh++];
-		p[0]=mod(u*mod(10,n),n);
-		p[1]=mod(p[0]+1,n);
-		for(int i=0;i<2;i++)
-		{
-			if(!flag[p[i]])
-			{
-				flag[p[i]]=true;
-				q[qt++]=p[i];
-				pre[p[i]].c=i+'0';
-				pre[p[i]].p=u;
-			}
-		}
-	}
-
-
+    stringstream a;
+    a<<A;
+    int p;
+    a>>p;
+    return p;
 }
-
-void printpath(int s)
+ 
+//////////////////////////////////////////////////////
+ 
+ 
+int L[1001][1001],seg[1001][1001];
+char A[1001],B[1001];
+int n,m,k;
+ 
+int lcs()
 {
-	if(s==-1)
-	{
-		return;
-	}
-	printpath(pre[s].p) ;
-	putchar(pre[s].c);
+    f(i,1,n+1)
+    {
+        f(j,1,m+1)
+        {
+            L[i][j]= max(L[i-1][j],L[i][j-1]);
+            seg[i][j]=0;
+            if(A[i-1]==B[j-1])
+            {
+                seg[i][j]=seg[i-1][j-1]+1;
+                if(seg[i][j]>=k)
+                {
+                    f(g,k,seg[i][j]+1)
+                    {
+                        L[i][j]=max(L[i][j],L[i-g][j-g]+g);
+                    }
+                }
+            }
+        }
+    }
+    return L[n][m];
 }
-
+ 
+ 
 int main()
 {
-	int t;
-	cin>>t;
-	while(t--)
-	{
-		cin>>n;
-		if(n==1)	
-		{
-			cout<<1<<endl;
-			continue;
-		}
-		for(int i=0;i<=n;i++)
-		{
-			flag[i]=false;
-		}
-		bfs(1);
-		printpath(0);
-		putchar('\n');
-	}
-	return 0;
-
+    while(1)
+    {
+        si(k);
+        if(k==0) break;
+        scanf("%s",A);
+        scanf("%s",B);
+        n=strlen(A);
+        m=strlen(B);
+        printf("%d\n",lcs());
+    }
 }
+ 
