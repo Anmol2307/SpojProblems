@@ -17,6 +17,7 @@
 #include <fstream>
 #include <utility>
 #include <iomanip>
+#include <climits>
 
 using namespace std;
 #define pb push_back
@@ -66,51 +67,23 @@ int stringtoint(string A)
 
 int main () {
 
-  int t;
-  scanf("%d",&t);
-
-  while (t--) {
-    int m;
-    scanf("%d",&m);
-
-    pair <int,int> arr[m];
-    for (int i =0; i <m; i++) {
-      pair<int,int> p;
-      scanf("%d",&p.first);
-      scanf("%d",&p.second);
-      arr[i] = p;
-    }
-    sort(arr,arr+m);
-    int dp[m];
-    dp[0]=1;
-    for (int i = 1; i < m; i++) {
-      int ans = 1;
-      for (int j = 0; j < i; j++) {
-        if (arr[j].second < arr[i].second && arr[j].first != arr[i].first) {
-          if (ans < (dp[j]+1)) ans = dp[j] + 1;
-        }
-      }
-      dp[i]=ans;
-    }
-    sort(dp,dp+m);
-    // for (int i =0; i < m; i++) {
-    //   printf("%d ",dp[i]);
-    // }
-    // printf("\n");
-    // exit(0);
-    int max = 0;
-    int total =0;
-    for (int i =m-1; i >= 0; i--) {
-      if (total + dp[i] <= m) {
-        max++;
-        total += dp[i];
-      }
-    }
-    printf("%d\n", max);
-
+  int c,n;
+  scanf("%d %d",&c,&n);
+  int pro = c*n;
+  pair <int,int> arr[pro];
+  for (int i = 0; i < pro; i++) {
+    pair<int,int> p;
+    scanf("%d %d",&p.first,&p.second);
+    arr[i] = p;
   }
-
-
-
+  int count[c+1];
+  memset(count,0,sizeof(count));
+  // int dp[c+1];
+  int sum = 0;
+  for (int i= 0; i < pro; i++) {
+    count[arr[i].first]++;
+    printf("%d %d\n",count[arr[i].first],arr[i].second);
+    if (count[arr[i].first] < arr[i].second) sum += arr[i].second - count[arr[i].first];
+  }
+  printf("%d\n",sum);
 }
-
