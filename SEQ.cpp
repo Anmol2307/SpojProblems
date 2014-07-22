@@ -30,7 +30,7 @@ using namespace std;
 #define eps 1e-9
 #define si(n) scanf("%d",&n)
 #define sll(n) scanf("%lld",&n)
-#define mod 1000000007
+#define mod 1000000000
 #define mm 10000000
 #define INF (1<<29)
 #define SET(a) memset(a,-1,sizeof(a))
@@ -41,9 +41,11 @@ using namespace std;
 #define max3(a,b,c) max(a,max(b,c))
 #define READ freopen("input.txt", "r", stdin)
 #define WRITE freopen("output.txt", "w", stdout)
+#define REP(i,n) for (int i = 1; i <= n; i++)
 
 
-typedef long long int LL;
+typedef long long int ll;
+typedef vector<vector<ll> > matrix;
 
 string inttostring(int n)
 {
@@ -73,4 +75,71 @@ inline void inp(int &n ) {//fast input function
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+int k;
 
+matrix mul(matrix A, matrix B)
+{
+    matrix C(k+1, vector<ll>(k+1));
+    REP(i, k) REP(j, k) REP(m, k)
+        C[i][j] = (C[i][j] + A[i][m] * B[m][j]) % mod;
+    return C;
+}
+
+// computes A ^ p
+matrix pow(matrix A, int p)
+{
+    if (p == 1)
+        return A;
+    if (p % 2)
+        return mul(A, pow(A, p-1));
+    matrix X = pow(A, p/2);
+    return mul(X, X);
+}
+
+
+
+int main () {
+
+  int t;
+  inp(t);
+
+  while (t--) {
+    
+    inp(k);
+
+    int b[k+1];
+    int c[k+1];
+    vector<ll> F1(k+1);
+    matrix T(k+1,vector<ll>(k+1));
+
+
+    for (int i=1; i <= k; i++) {
+      inp(b[i]);
+      F1[i] = b[i];
+    }
+
+    for (int i=1; i <= k; i++) {
+      inp(c[i]);
+      T[k][k+1-i]= c[i];
+    }
+
+    for (int i =1; i < k; i++) {
+      T[i][i+1] = 1;
+    }
+    int n;
+    inp(n);
+
+    if (n <= k) {
+      printf("%d\n",b[n]);
+    }
+    else {
+      T = pow(T, n-1);
+      ll res = 0;
+      for (int i=1; i <= k; i++) {
+          res = (res + T[1][i] * F1[i]) % mod;
+      }
+
+      printf("%lli\n",res);
+    }
+  }
+}
