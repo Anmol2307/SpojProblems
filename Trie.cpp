@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
  
 #define ARRAY_SIZE(a) sizeof(a)/sizeof(a[0])
  
@@ -8,18 +8,14 @@
  
 #define ALPHABET_SIZE (26)
 #define INDEX(c) ((int)c - (int)'a')
- 
-#define FREE(p) \
-    free(p);    \
-    p = NULL;
- 
+  
 // forward declration
 typedef struct trie_node trie_node_t;
  
 // trie node
 struct trie_node
 {
-    int words;
+    // int words;
     int prefixes;
     int value; // non zero if leaf
     trie_node_t *children[ALPHABET_SIZE];
@@ -36,22 +32,18 @@ struct trie
  
 trie_node_t *getNode(void)
 {
-    trie_node_t *pNode = NULL;
+    trie_node_t *pNode = new trie_node_t;
+
  
-    pNode = (trie_node_t *)malloc(sizeof(trie_node_t));
+    pNode->value   = 0;
+    // pNode->words = 0;
+    pNode->prefixes = 0;
  
-    if( pNode )
+    for(int i = 0; i < ALPHABET_SIZE; i++)
     {
-        int i;
- 
-        pNode->value   = 0;
- 
-        for(i = 0; i < ALPHABET_SIZE; i++)
-        {
-            pNode->children[i] = NULL;
-        }
+        pNode->children[i] = NULL;
     }
- 
+    
     return pNode;
 }
  
@@ -63,15 +55,15 @@ void initialize(trie_t *pTrie)
  
 void insert(trie_t *pTrie, char key[])
 {
-    int level;
     int length = strlen(key);
     int index;
     trie_node_t *pCrawl;
  
     pTrie->count++;
     pCrawl = pTrie->root;
- 
-    for( level = 0; level < length; level++ )
+    
+    // printf("%s\n",key);
+    for(int level = 0; level < length; level++ )
     {
         index = INDEX(key[level]);
  
@@ -79,29 +71,34 @@ void insert(trie_t *pTrie, char key[])
         {
             // Skip current node
             pCrawl = pCrawl->children[index];
+            pCrawl->prefixes += 1;
+            // printf("1 %c %d\n",key[level],pCrawl->prefixes);
+            // pCrawl->prefixes += 1;
         }
         else
         {
             // Add new node
-            pCrawl->children[index] = getNode();
+            pCrawl->children[index] = getNode();            
             pCrawl = pCrawl->children[index];
+            pCrawl->prefixes += 1;
+            // printf("2 %c %d\n",key[level],pCrawl->prefixes);
+            
         }
     }
  
     // mark last node as leaf (non zero)
     pCrawl->value = pTrie->count;
 }
- 
+
 int search(trie_t *pTrie, char key[])
 {
-    int level;
     int length = strlen(key);
     int index;
     trie_node_t *pCrawl;
  
     pCrawl = pTrie->root;
  
-    for( level = 0; level < length; level++ )
+    for(int level = 0; level < length; level++ )
     {
         index = INDEX(key[level]);
  
@@ -114,6 +111,31 @@ int search(trie_t *pTrie, char key[])
     }
  
     return (0 != pCrawl && pCrawl->value);
+}
+
+ 
+int countPrefixes(trie_t *pTrie, char key[])
+{
+    int length = strlen(key);
+    int index;
+    trie_node_t *pCrawl;
+ 
+    pCrawl = pTrie->root;
+ 
+    for(int level = 0; level < length; level++ )
+    {
+        index = INDEX(key[level]);
+ 
+        if( !pCrawl->children[index] )
+        {
+            return 0;
+        }
+ 
+        pCrawl = pCrawl->children[index];
+        // printf("%c %d\n",key[level],pCrawl->prefixes);
+    }
+    return pCrawl->prefixes;
+    // return (0 != pCrawl && pCrawl->prefixes);
 }
  
 int leafNode(trie_node_t *pNode)
@@ -161,7 +183,7 @@ bool deleteHelper(trie_node_t *pNode, char key[], int level, int len)
             if( deleteHelper(pNode->children[index], key, level+1, len) )
             {
                 // last node marked, delete it
-                FREE(pNode->children[index]);
+                // FREE(pNode->children[index]);
  
                 // recursively climb up, and delete eligible nodes
                 return ( !leafNode(pNode) && isItFreeNode(pNode) );
@@ -188,15 +210,15 @@ int main()
     trie_t trie;
  
     initialize(&trie);
- 
     for(int i = 0; i < ARRAY_SIZE(keys); i++)
     {
         insert(&trie, keys[i]);
     }
  
-    deleteKey(&trie, keys[0]);
- 
-    printf("%s %s\n", "she", search(&trie, "she") ? "Present in trie" : "Not present in trie");
+    // deleteKey(&trie, keys[0]);
+    char str[] = "s";
+    printf("%d\n",countPrefixes(&trie, str));
+    printf("%s %s\n", str, search(&trie, str) ? "Present in trie" : "Not present in trie");
  
     return 0;
 }
