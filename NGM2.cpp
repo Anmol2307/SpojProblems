@@ -1,114 +1,80 @@
+#include <cassert>
+#include <cctype>
+#include <climits>
 #include <cmath>
-#include <ctime>
-#include <iostream>
-#include <string>
-#include <vector>
 #include <cstdio>
-#include <sstream>
-#include <algorithm>
 #include <cstdlib>
 #include <cstring>
-#include <map>
-#include <set>
-#include <queue>
-#include <cctype>
-#include <list>
-#include <stack>
+#include <ctime>
+#include <iostream>
 #include <fstream>
-#include <utility>
+#include <sstream>
 #include <iomanip>
-#include <climits>
-
+#include <string>
+#include <vector>
+#include <deque>
+#include <list>
+#include <set>
+#include <map>
+#include <bitset>
+#include <stack>
+#include <queue>
+#include <algorithm>
+#include <functional>
+#include <iterator>
+#include <limits>
+#include <numeric>
+#include <utility>
+#include <valarray>
 using namespace std;
-#define pb push_back
-#define all(s) s.begin(),s.end()
-#define f(i,a,b) for(int i=a;i<b;i++)
-#define F(i,a,b) for(int i=a;i>=b;i--)
-#define PI 3.1415926535897932384626433832795
-#define BIG_INF 7000000000000000000LL
-#define mp make_pair
-#define eps 1e-9
-#define si(n) scanf("%d",&n)
-#define sll(n) scanf("%lld",&n)
-#define mod 1000000007
-#define mm 10000000
-#define INF (1<<29)
-#define SET(a) memset(a,-1,sizeof(a))
-#define CLR(a) memset(a,0,sizeof(a))
-#define FILL(a,v) memset(a,v,sizeof(a))
-#define EPS 1e-9
-#define min3(a,b,c) min(a,min(b,c))
-#define max3(a,b,c) max(a,max(b,c))
-#define READ freopen("input.txt", "r", stdin)
-#define WRITE freopen("output.txt", "w", stdout)
 
+#define DEBUG if(0)
+#define PAUSE system("pause")
+#define OFF ios::sync_with_stdio(false)
+#define ALL(c) c.begin(), c.end()
+#define PB(x) push_back(x)
+#define SET(p) memset(p, -1, sizeof(p))
+#define CLR(p) memset(p, 0, sizeof(p))
+#define BIG(p) memset(p, 0x3f, sizeof(p))
+#define REV(s, e) reverse(s, e);
+#define READ(f) freopen(f, "r", stdin)
+#define WRITE(f) freopen(f, "w", stdout)
+#define SZ(c) c.size()
+#define TBIT(c, n) !!(c & (1 << n))
+#define SBIT(c, n) (c |= (1 << n))
+#define CBIT(c, n) (c &= ~(1 << n))
 
-typedef long long int LL;
+template< class T > T abst(const T &n) { return (n < 0 ? -n : n); }
+template< class T > T max2(const T &a, const T &b) { return (!(a < b) ? a : b); }
+template< class T > T min2(const T &a, const T &b) { return (a < b ? a : b); }
+template< class T > T max3(const T &a, const T &b, const T &c) { return max2(a, max2(b, c)); }
+template< class T > T min3(const T &a, const T &b, const T &c) { return min2(a, min2(b, c)); }
+template< class T > T gcd(const T a, const T b) { return (b ? gcd<T>(b, a%b) : a); }
+template< class T > T lcm(const T a, const T b) { return (a / gcd<T>(a, b) * b); }
+template< class T > T mod(const T &a, const T &b) { return (a < b ? a : a % b); }
+template< class T > bool inrange(const T &a, const T &b, const T &c) { return a<=b && b<=c; }
+template< class T > T sq(const T &x) { return x * x; }
 
-string inttostring(int n)
-{
-  stringstream a;
-  a<<n;
-  string A;
-  a>>A;
-  return A;
-}
+const int MAX = 16;
 
-int stringtoint(string A)
-{
-  stringstream a;
-  a<<A;
-  int p;
-  a>>p;
-  return p;
-}
-
-inline void inp(int &n ) {//fast input function
-    n=0;
-    int ch=getchar(),sign=1;
-    while( ch < '0' || ch > '9' ){if(ch=='-')sign=-1; ch=getchar();}
-    while( ch >= '0' && ch <= '9' )
-        n=(n<<3)+(n<<1)+ ch-'0', ch=getchar();
-    n=n*sign;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////
-int gcd(int a, int b) {
-    while(b) b ^= a ^= b ^= a %= b;
-    return a;
-}
-
-int main () {
-
-  int n,k;
-  inp(n);inp(k);
-  int arr[k];
-
-  int dp[k];
-  
-  for (int i = 0; i < k; i++) {
-    inp(arr[i]);
-  }
-
-  for (int i = 0; i < k; i++) {
-    dp[i] = n/arr[i];
-    for (int j = 0; j < i; j++) {
-      if (arr[j]<=arr[i] && arr[i]%arr[j]==0) {
-        dp[i] = 0;
+int main() {
+   int i, j, k, tot, nb;
+   long long d, val, n, a[MAX];
+   cin >> n >> k;
+   for(i = 0; i < k; i++) cin >> a[i];
+   tot = (1 << k), d = n;
+   for(i = 1; i < tot; i++) {
+      nb = 0, val = 1;
+      for(j=0; j < k; j++) {
+         if(i & (1<<j)) {
+            nb++;
+            val = lcm(val, a[j]);
+         }
       }
-      else if (arr[j] > arr[i] && arr[j]%arr[i]==0) {
-        dp[i] -= dp[j];
-      }
-      else {
-        int lcm = arr[j]*(arr[i]/gcd(arr[j],arr[i]));
-        dp[i] -= (int)(n/lcm);
-      }
-    }
-    // printf("%d %d\n",i,dp[i]);
-  }
-  int ans = n;
-  for (int i = 0; i < k; i++) {
-    ans -= dp[i];
-  }
-  printf("%d\n",ans);
+      // printf("%d %lli\n",i,val);
+      if(nb & 1) n -= d / val;
+      else n += d / val;
+   }
+   printf("%lld\n", n);
+   return 0;
 }
