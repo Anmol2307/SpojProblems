@@ -7,16 +7,16 @@ using namespace std;
 
 // The main function to find the maximum rectangular area under given
 // histogram with n bars
-int getMaxArea(int hist[], int n)
+long long getMaxArea(int hist[], int n)
 {
     // Create an empty stack. The stack holds indexes of hist[] array
     // The bars stored in stack are always in increasing order of their
     // heights.
     stack<int> s;
 
-    int max_area = 0; // Initalize max area
+    long long max_area = 0; // Initalize max area
     int tp;  // To store top of stack
-    int area_with_top; // To store area with top bar as the smallest bar
+    long long area_with_top; // To store area with top bar as the smallest bar
 
     // Run through all bars of given histogram
     int i = 0;
@@ -35,7 +35,7 @@ int getMaxArea(int hist[], int n)
             s.pop();  // pop the top
 
             // Calculate the area with hist[tp] stack as smallest bar
-            area_with_top = hist[tp] * (s.empty() ? i : i - s.top() - 1);
+            area_with_top = (long long)((long long)hist[tp] * (long long)(long long)(s.empty() ? i : i - s.top() - 1));
 
             // update max area, if needed
             if (max_area < area_with_top)
@@ -49,7 +49,7 @@ int getMaxArea(int hist[], int n)
     {
         tp = s.top();
         s.pop();
-        area_with_top = hist[tp] * (s.empty() ? i : i - s.top() - 1);
+        area_with_top = (long long)((long long)hist[tp] * (long long)(s.empty() ? i : i - s.top() - 1));
 
         if (max_area < area_with_top)
             max_area = area_with_top;
@@ -67,7 +67,7 @@ int main () {
         for (int i = 0; i < n; i++) {
             scanf("%d",&arr[i]);
         }
-        printf("%d\n",getMaxArea(arr,n));
+        printf("%lli\n",getMaxArea(arr,n));
         scanf("%d",&n);
     }
 }
