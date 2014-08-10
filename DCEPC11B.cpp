@@ -1,98 +1,75 @@
-#include <cmath>
-#include <ctime>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cstdio>
-#include <sstream>
-#include <algorithm>
-#include <cstdlib>
-#include <cstring>
-#include <map>
-#include <set>
-#include <queue>
-#include <cctype>
-#include <list>
-#include <stack>
-#include <fstream>
-#include <utility>
-#include <iomanip>
+#include<stdio.h>
+#include<iostream>
+#include<cmath>
+#include<map>
+#include<cstring>
+#include<algorithm>
+#include<stack>
+
+#define true 1
+#define false 0
+#define INF 100000
+
+#define MAX 100000
+#define rep(i,n) for(i=0;i<n;i++)
+#define rrep(i,n) for(i=n-1;i>=0;i--)
+
+
+
+typedef long long ll;
 
 using namespace std;
-#define pb push_back
-#define all(s) s.begin(),s.end()
-#define f(i,a,b) for(int i=a;i<b;i++)
-#define F(i,a,b) for(int i=a;i>=b;i--)
-#define PI 3.1415926535897932384626433832795
-#define BIG_INF 7000000000000000000LL
-#define mp make_pair
-#define eps 1e-9
-#define si(n) scanf("%d",&n)
-#define sll(n) scanf("%lld",&n)
-#define mod 1000000007
-#define mm 10000000
-#define INF (1<<29)
-#define SET(a) memset(a,-1,sizeof(a))
-#define CLR(a) memset(a,0,sizeof(a))
-#define FILL(a,v) memset(a,v,sizeof(a))
-#define EPS 1e-9
-#define min3(a,b,c) min(a,min(b,c))
-#define max3(a,b,c) max(a,max(b,c))
-#define READ freopen("input.txt", "r", stdin)
-#define WRITE freopen("output.txt", "w", stdout)
-#define i64 unsigned long long
 
 
-typedef long long LL;
 
-string inttostring(int n)
-{
-  stringstream a;
-  a<<n;
-  string A;
-  a>>A;
-  return A;
+ll fastexp(ll a,ll b,ll mod){
+    ll res;
+    if(b==0)
+        return 1;
+    if(b==1)
+        return a;
+    res = fastexp(a,b/2,mod)%mod;
+    if(b%2==0)
+        return (res*res)%mod;
+    else
+        return ( ( (res*res)%mod)*a)%mod;
 }
 
-int stringtoint(string A)
-{
-  stringstream a;
-  a<<A;
-  int p;
-  a>>p;
-  return p;
-}
 
-inline void inp(int &n ) {//fast input function
-    n=0;
-    int ch=getchar(),sign=1;
-    while( ch < '0' || ch > '9' ){if(ch=='-')sign=-1; ch=getchar();}
-    while( ch >= '0' && ch <= '9' )
-        n=(n<<3)+(n<<1)+ ch-'0', ch=getchar();
-    n=n*sign;
-}
+int main(){
 
-long long factMOD(int n, int MOD)
-{
-    long long res = 1; 
-    while (n > 0)
-    {
-        for (int i=2, m=n%MOD; i<=m; i++)
-            res = (res * i) % MOD;
-        if ((n/=MOD)%2 > 0) 
-            res = MOD - res;
+ll t,n,p,res,i;
+
+cin>>t;
+
+while(t--){
+    cin>>n>>p;
+
+    if(n >= p){
+        cout<<"0"<<endl;continue;
     }
-    return res;
+    if(n==1){
+        cout<<"1"<<endl;
+        continue;
+    }
+    if(n==p-1){
+        cout<<p-1<<endl;
+        continue;
+    }
+        res = 1;
+
+    for(i=n+1;i <= p-2 ;i++)
+        res = (res*i)%p;
+
+
+    res = fastexp(res,p-2,p);
+
+    cout<<res<<endl;
+
 }
 
 
-int main () {
-  int t;
-  inp(t);
 
-  while (t--) {
-    int n, p;
-    inp(n); inp(p);
-    printf("%lli\n",factMOD(n,p));
-  }
-}
+
+return 0;
+}   
