@@ -1,3 +1,6 @@
+//Based on Wilson's Algorithm and Fermat's Little Theorm
+
+
 #include<stdio.h>
 #include<iostream>
 #include<cmath>
@@ -5,6 +8,8 @@
 #include<cstring>
 #include<algorithm>
 #include<stack>
+
+
 
 #define true 1
 #define false 0
