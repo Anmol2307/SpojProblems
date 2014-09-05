@@ -1,113 +1,93 @@
-#include <bits/stdc++.h>
- 
+#include <iostream>
+#include <cstdio>
+#include <list>
+#include <queue>
+#include <cstring>
+#include <algorithm>
+#include <time.h>
+#define maxn 100000
 using namespace std;
  
-const int N = 100010;
+typedef long long LL;
  
-typedef unsigned long long LL;
+char s[100005];
+int n;
  
-int prime[100];
-const LL INF = (LL) 1e19;
+LL mod = 1000000007;
+LL memo[100005][3][2];
  
-LL memo[65][65][2];
-vector <int> a;
- 
-LL dp (int index, int sum, int tight) {
-    LL &res = memo[index][sum][tight];
-    if (res == -1) {
+LL dp (int index, int modValue,int tight)
+{
+    LL &res = memo[index][modValue][tight];
+    // if res is not equal to -1, then just return it.
+    if (res == -1)
+    {
         res = 0;
-        if (index == a.size()) {
-            if (prime[sum])
+        if (index == n)
+        {
+            // we are constructing the values from left to right,
+            // means everytime we are taking some number for every index going from left to right,
+            // in this way our number is getting constructed.
+            // !tight means less than value of s.
+            // modValue should be zero. As we need the number to be 0 mod 3.
+            if (!tight & modValue == 0)
                 res = 1;
         }
-        else {
-            if (tight) {
-                for (int i = 0; i <= a[index]; i++) {
-                    if (i == a[index]) {
-                        res += dp (index + 1, sum + i, tight);
-                    } else {
-                        res += dp (index + 1, sum + i, false);
+        else
+        {
+            // if number constructed upto now is same as the number S taken upto digit index.
+            if (tight)
+            {
+                for (int i = 0; i <= s[index] - '0'; i++)
+                {
+                    if (i == s[index] - '0')
+                    {
+                        // value is still equal. Hence it is stil tight.
+                        res += dp (index + 1, (modValue + i * i) % 3, 1);
+                        res %= mod;
+                    }
+                    else
+                    {
+                        // value becomes less so it is not tight, tight becomes false.
+                        res += dp (index + 1, (modValue + i * i) % 3, 0);
+                        res %= mod;
                     }
                 }
-            } 
-            else {
-                for (int i = 0; i < 2; i++) {
-                    res += dp (index + 1, sum + i, false);
+            }
+            else
+            {
+                // if already tight is false, then you can take any number in this index, as it is already
+                // less.
+                for (int i = 0; i < 10; i++)
+                {
+                    // it is already not tight, so not going to be tight again.
+                    res += dp (index + 1, (modValue + i * i) % 3, 0);
+                    res %= mod;
                 }
             }
         }
     }
+ 
     return res;
 }
  
-LL solve (LL n) {
-    if (n == 0)
-        return 0;
- 
-    a.clear();
-    while (n) {
-        a.push_back (n % 2);
-        n /= 2;
-    }
-    reverse (a.begin(), a.end());
- 
-    memset (memo, -1, sizeof (memo));
-    LL ans = dp (0, 0, 1);
-    return ans;
-}
- 
-LL digit_sum (LL n) {
-    LL ans = 0;
-    while (n) {
-        ans += n % 2;
-        n /= 2;
-    }
-    return ans;
-}
- 
-LL brute (LL a, LL b) {
-    LL ans = 0;
-    for (LL i = a; i <= b; i++) {
-        if (prime [digit_sum (i)]) {
-            ans ++;
-        }
-    }
-    return ans;
-}
- 
-int isPrime (int n) {
-    for (int i = 2; i * i <= n; i++)
-        if (n % i == 0)
-            return false;
-    return true;
-}
- 
-void pre () {
-    for (int i = 2; i < 100; i++) {
-        prime[i] = isPrime (i);
-    }
-}
- 
-int main() {
-    pre();
-    LL a, b;
+int main()
+{
+    //freopen ("input.txt", "r", stdin);
+    //freopen ("output.txt", "w", stdout);
     int T;
-    cin >> T;
-    assert (T >= 1 && T <= 100000);
-    while (T--) {
-        cin >> a >> b;
-        assert (a <= b);
-        assert (a >= 1 && a <= INF);
-        assert (b >= 1 && b <= INF);
+    scanf ("%d", &T);
+    while (T--)
+    {
+        scanf ("%s", &s);
+        n = strlen (s);
  
-        LL ans = solve (b) - solve (a - 1);
-        /*
-        if (b - a <= 10000) {
-            LL ans1 = brute (a, b);
-            assert (ans == ans1);
-        }
-        */
-        cout << ans << endl;
+        memset (memo, -1, sizeof(memo));
+ 
+        LL ans = dp (0 , 0, 1);
+ 
+        printf ("%d\n", ans);
     }
+ 
     return 0;
 }
