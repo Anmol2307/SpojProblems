@@ -1,67 +1,6 @@
-#include <cmath>
-#include <ctime>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cstdio>
-#include <sstream>
-#include <algorithm>
-#include <cstdlib>
-#include <cstring>
-#include <map>
-#include <set>
-#include <queue>
-#include <cctype>
-#include <list>
-#include <stack>
-#include <fstream>
-#include <utility>
-#include <iomanip>
-#include <climits>
+#include <bits/stdc++.h>
 
 using namespace std;
-#define pb push_back
-#define all(s) s.begin(),s.end()
-#define f(i,a,b) for(int i=a;i<b;i++)
-#define F(i,a,b) for(int i=a;i>=b;i--)
-#define PI 3.1415926535897932384626433832795
-#define BIG_INF 7000000000000000000LL
-#define mp make_pair
-#define eps 1e-9
-#define si(n) scanf("%d",&n)
-#define sll(n) scanf("%lld",&n)
-#define mod 1000000007
-#define mm 10000000
-#define INF (1<<29)
-#define SET(a) memset(a,-1,sizeof(a))
-#define CLR(a) memset(a,0,sizeof(a))
-#define FILL(a,v) memset(a,v,sizeof(a))
-#define EPS 1e-9
-#define min3(a,b,c) min(a,min(b,c))
-#define max3(a,b,c) max(a,max(b,c))
-#define READ freopen("input.txt", "r", stdin)
-#define WRITE freopen("output.txt", "w", stdout)
-
-
-typedef long long int LL;
-
-string inttostring(int n)
-{
-  stringstream a;
-  a<<n;
-  string A;
-  a>>A;
-  return A;
-}
-
-int stringtoint(string A)
-{
-  stringstream a;
-  a<<A;
-  int p;
-  a>>p;
-  return p;
-}
 
 inline void inp(int &n ) {//fast input function
     n=0;
@@ -72,29 +11,48 @@ inline void inp(int &n ) {//fast input function
     n=n*sign;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
+// BIT query and update functions
+typedef long long int lli;
+#define MOD 5000000
 
+const int maxn = 100010;
+
+int tree[maxn];
+
+int read(int idx){
+    int sum = 0;
+    while(idx > 0){
+        sum = (sum + tree[idx])%MOD;
+        idx -= (idx & -idx);
+    }
+    return sum;
+}
+  
+void update(int idx, int val){
+    while(idx <= maxn){
+        tree[idx] = (tree[idx] + val)%MOD;
+        idx += (idx & -idx);
+    }
+}
 
 
 int main () {
-  int n,k;
+  int n, k;
   inp(n); inp(k);
-  int arr[n+1];
-
-  for (int i = 1 ; i <= n; i++) {
+  k--;
+  int arr[n];
+  for (int i = 0; i < n; i++) {
     inp(arr[i]);
+    arr[i]++;
   }
 
-  int dp[n+1][k+1];
-
-  for (int i = 1; i <= n; i++) {
-    dp[i][1] = i;
-  }
-
-  for (int i = 2; i <= n; i++) {
-    for (int j = 2; j <= i; j++) {
-      if (arr[j])
+  int ans = 0;
+  for (int i = 0; i < n; i++) {
+    int val = read(arr[i] -1);
+    if (val >= k){
+      ans = (ans + val - k + 1)%MOD;
     }
+    update(arr[i],1);
   }
-
+  printf("%d\n",ans);
 }

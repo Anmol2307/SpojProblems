@@ -10,6 +10,8 @@ inline void inp(int &n ) {//fast input function
         n=(n<<3)+(n<<1)+ ch-'0', ch=getchar();
     n=n*sign;
 }
+
+
 long double pi=3.14159265358979323846264338327950;
 int n, f;
 
