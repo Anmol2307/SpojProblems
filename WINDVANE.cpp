@@ -1,66 +1,6 @@
-#include <cmath>
-#include <ctime>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cstdio>
-#include <sstream>
-#include <algorithm>
-#include <cstdlib>
-#include <cstring>
-#include <map>
-#include <set>
-#include <queue>
-#include <cctype>
-#include <list>
-#include <stack>
-#include <fstream>
-#include <utility>
-#include <iomanip>
+#include <bits/stdc++.h>
 
 using namespace std;
-#define pb push_back
-#define all(s) s.begin(),s.end()
-#define f(i,a,b) for(int i=a;i<b;i++)
-#define F(i,a,b) for(int i=a;i>=b;i--)
-#define PI 3.1415926535897932384626433832795
-#define BIG_INF 7000000000000000000LL
-#define mp make_pair
-#define eps 1e-9
-#define si(n) scanf("%d",&n)
-#define sll(n) scanf("%lld",&n)
-#define mod 1000000007
-#define mm 10000000
-#define INF (1<<29)
-#define SET(a) memset(a,-1,sizeof(a))
-#define CLR(a) memset(a,0,sizeof(a))
-#define FILL(a,v) memset(a,v,sizeof(a))
-#define EPS 1e-9
-#define min3(a,b,c) min(a,min(b,c))
-#define max3(a,b,c) max(a,max(b,c))
-#define READ freopen("input.txt", "r", stdin)
-#define WRITE freopen("output.txt", "w", stdout)
-#define i64 unsigned long long
-
-typedef long long LL;
-
-string inttostring(int n)
-{
-  stringstream a;
-  a<<n;
-  string A;
-  a>>A;
-  return A;
-}
-
-int stringtoint(string A)
-{
-  stringstream a;
-  a<<A;
-  int p;
-  a>>p;
-  return p;
-}
 
 inline void inp(int &n ) {//fast input function
     n=0;
@@ -70,41 +10,93 @@ inline void inp(int &n ) {//fast input function
         n=(n<<3)+(n<<1)+ ch-'0', ch=getchar();
     n=n*sign;
 }
+struct query {
+  int x1, y1, x2, y2, d;
+  query(int a, int b, int c, int e, int f) {
+    x1 = a;
+    y1 = b;
+    x2 = c;
+    y2 = e;
+    d = f;
+  }
+};
 
-//////////////////////////////////////////////////////////////////////////////////  
+bool check (int x, int y, query c) {
+  if (x >= c.x1 && x <= c.x2 && y >= c.y1 && y <= c.y2) return true;
+  return false;
+}
 
-char mat[1000][1000];
-
-
-
+char find (char c, int dir) {
+  if (dir == 0) return c;
+  else if (dir == 1) {
+    switch(c)
+    {
+      case 'N': return 'E'; 
+      case 'E': return 'S';
+      case 'S': return 'W';
+      case 'W': return 'N';  
+    }
+  }
+  else if (dir == 2) {
+    switch(c)
+    {
+      case 'N': return 'S'; 
+      case 'E': return 'W';
+      case 'S': return 'N';
+      case 'W': return 'E';  
+    }
+  }
+  else if (dir == 3) {
+    switch(c)
+    {
+      case 'N': return 'W'; 
+      case 'E': return 'N';
+      case 'S': return 'E';
+      case 'W': return 'S';  
+    }
+  }
+}
 
 int main () {
-
-  int m,n;
+  int m, n;
   inp(m); inp(n);
-
-  for (int i =0; i < m; i++) {
-    for (int j = 0; j < n; j++) {
-      scanf("%c",&mat[m][n]);
-    }
+  vector <char*> mat;
+  for (int i = 0; i < m; i++) {
+    char* in = new char[n];
+    scanf("%s",in);
+    mat.push_back(in);
   }
 
   int c;
   inp(c);
+  vector <query> command;
+  for (int i = 0; i < c; i++) {
+    char ch;
+    scanf("%c",&ch);
 
-  for (int i=0; i < c; i++) {
-    char x;
-    scanf("%c",&x);
-    if(x=='C') {
-      int x1,y1,x2,y2,d; 
-      inp(x1);inp(y1);inp(x2);inp(y2);inp(d);
-      update();
+    if (ch == 'C') {
+      int x1, y1, x2, y2, d;
+      inp(x1); inp(y1); inp(x2); inp(y2); inp(d);
+
+      query q(x1,y1,x2,y2,d);
+      command.push_back(q);
     }
-    else {
-      int x,y;
-      inp(x);inp(y);
-      
+    else if (ch == 'D') {
+      int x, y, dir = 0;
+      inp(x); inp(y);
+
+      for (int j = 0; j < command.size(); j++) {
+        if (check(x,y,command[j])) {
+          if (command[j].d == 1) dir -= 1;
+          else dir += 1;
+        }
+      }
+      dir += 4*command.size();
+      dir %= 4;
+      char ans = find(mat[x-1][y-1],dir);
+      printf("%c\n",ans);
     }
+
   }
 
 }
