@@ -98,7 +98,7 @@ int main () {
   inp(t);
   int x = 1;
   while (t--) {
-    
+    memset(tree,0,sizeof(tree));
     int m,k;
     inp(n);inp(m);inp(k);
 
