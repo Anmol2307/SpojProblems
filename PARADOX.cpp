@@ -33,4 +33,63 @@ typedef ostringstream oss;
 #define pl(n) printf("%lld",n)
 #define ps printf(" ")
 #define pn printf("\n")
-#define N 222222
+#define N 105
+#define MX 10000000
+
+int dis[N][N];
+    
+
+int main() {
+  
+  int n;
+  inp(n);
+
+  while( n != 0)
+  {
+    
+    fu(i,0,n) fu(j,0,n) dis[i][j] = MX;
+
+    fu(i,1,n)
+    {
+      int x; inp(x);
+      string str;
+      cin>>str;
+      if(str == "true")
+        dis[i][x] = 2;
+      else
+        dis[i][x] = 1;
+    }
+
+    fu(k,1,n)
+    {
+      fu(i,1,n)
+      { 
+        fu(j,1,n)
+        {
+          if(dis[i][j]>dis[i][k]+dis[k][j])
+          {
+            dis[i][j]=dis[i][k]+dis[k][j];
+          }
+        }
+      }
+    }
+
+    int temp=0;
+    fu(i,1,n)
+    {
+      if( dis[i][i] < INT_MAX/ 2 && dis[i][i] % 2 == 1)
+      {
+        cout<<"PARADOX"<<endl;
+        temp = 1;
+        break;
+      }
+
+    }
+    if(temp == 0)
+    {
+      cout<<"NOT PARADOX"<<endl;
+    }
+    inp(n);
+  }
+  return 0;
+}

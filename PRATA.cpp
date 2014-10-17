@@ -34,3 +34,48 @@ typedef ostringstream oss;
 #define ps printf(" ")
 #define pn printf("\n")
 #define N 222222
+
+
+int main () {
+  int t;
+  inp(t);
+
+  while (t--) {
+    int p; inp(p);
+    int l; inp(l);
+    int arr[l];
+
+    vector <priority_queue<int, vector<int>, greater<int> > >pq(l);
+
+    rep(i,l) {
+      inp(arr[i]);
+    }
+
+    sort(arr,arr+l);
+
+    rep(i,l) {
+      pq[i].push(arr[i]);
+    }
+
+    int total = 0;
+    int ans = 0;
+    int last[l];
+    rep(i,l) last[i] = 1;
+    while (total < p) {
+      int mi = -1;
+      int mv = INT_MAX;
+      for (int i = 0; i < l; i++){
+        if (pq[i].top() < mv) {
+          mi = i;
+          mv = pq[i].top();
+        }
+      }
+      ans = mv;
+      pq[mi].pop();
+      pq[mi].push(mv + (last[mi]+1)*arr[mi]);
+      last[mi]++;
+      total++;
+    }
+    printf("%d\n",ans);
+  }
+}

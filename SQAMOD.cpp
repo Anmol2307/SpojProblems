@@ -19,7 +19,7 @@ llu dp[100005][3][2];
 int n;
 
 llu find (int index, int less, int modval) {
-  llu ans = dp[index][less][modval];
+  llu ans = dp[index][modval][less];
 
   if (ans != -1) return ans;
   else {
